@@ -16,13 +16,13 @@ HANDLE hProcess, hThread = NULL;
 LPVOID rBuffer = NULL;
 
 
-/* un poco de mierda para reservar el espacio en memoria del proceso remoto */
-unsigned char puke[] = "C:/Users/Techie12/source/repos/sexoanal/x64/debug/DLL1.dll";
+/* ruta de la dll */
+unsigned char dll[] = "C:/Users/Techie12/source/repos/sexoanal/x64/debug/DLL1.dll";
 
 int main(int argc, char* argv[]) {
 
 
-	PID = 21000;
+	PID = 6000;
 	
 	printf("%s intentando abrir un handle al proceso (%ld)\n", inf, PID);
 
@@ -38,10 +38,10 @@ int main(int argc, char* argv[]) {
 	}
 
 	/* Alocación y asignacion de bytes a la memoria del proceso */
-	rBuffer = VirtualAllocEx(hProcess, NULL, sizeof(puke), (MEM_COMMIT | MEM_RESERVE), PAGE_EXECUTE_READWRITE);
-	PVOID lpBuffer = malloc(sizeof(puke));
-	memcpy(lpBuffer, &puke[0], sizeof(puke));
-	int writed = WriteProcessMemory(hProcess, rBuffer, lpBuffer, sizeof(puke), NULL);
+	rBuffer = VirtualAllocEx(hProcess, NULL, sizeof(dll), (MEM_COMMIT | MEM_RESERVE), PAGE_EXECUTE_READWRITE);
+	PVOID lpBuffer = malloc(sizeof(dll));
+	memcpy(lpBuffer, &dll[0], sizeof(dll));
+	int writed = WriteProcessMemory(hProcess, rBuffer, lpBuffer, sizeof(dll), NULL);
 	int dllAddr = 
 	printf("add %d %p,",writed, rBuffer);
 
