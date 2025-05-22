@@ -20,9 +20,14 @@ LPVOID rBuffer = NULL;
 unsigned char dll[] = "C:/Users/Techie12/source/repos/sexoanal/x64/debug/DLL1.dll";
 
 int main(int argc, char* argv[]) {
+	/* Comprobamos si por casualidad el usuario no ha especificado ningun PID*/
+	if (argc < 2 ) {
+		printf("%s No process ID specified for injection\n", err);
+		return EXIT_FAILURE;
+	}
 
 
-	PID = 6000;
+	PID = atoi(argv[1]);
 	
 	printf("%s intentando abrir un handle al proceso (%ld)\n", inf, PID);
 
@@ -41,13 +46,23 @@ int main(int argc, char* argv[]) {
 	rBuffer = VirtualAllocEx(hProcess, NULL, sizeof(dll), (MEM_COMMIT | MEM_RESERVE), PAGE_EXECUTE_READWRITE);
 	PVOID lpBuffer = malloc(sizeof(dll));
 	memcpy(lpBuffer, &dll[0], sizeof(dll));
-	int writed = WriteProcessMemory(hProcess, rBuffer, lpBuffer, sizeof(dll), NULL);
-	int dllAddr = 
-	printf("add %d %p,",writed, rBuffer);
-
+	int wrote = WriteProcessMemory(hProcess, rBuffer, lpBuffer, sizeof(dll), NULL);
+	printf("add %d %p,",wrote, rBuffer);
+    if (wrote == 0) {
+		printf("%s no se pudo escribir en la memoria del proceso (%ld), error %ld", err, PID, GetLastError());
+		return EXIT_FAILURE;
+	}
+	/* Aqui es donde se inyecta la DLL*/
+	printf("%s Trying to inyect DLL into desired process (%ld)\n", inf, PID);
 	PVOID loadLibraryAddr = GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryA");
 	CreateRemoteThread(hProcess, 0, 0, (LPTHREAD_START_ROUTINE)loadLibraryAddr, rBuffer, 0, 0);
-
+	if (CreateRemoteThread == NULL) {
+		printf("%s Could not inject DLL to the PID (%ld), error %ld", err, PID, GetLastError());
+		return EXIT_FAILURE;
+	}
+	else {
+		printf("%s DLL injected into the PID (%ld)\n", ok, PID);
+	}
 	return EXIT_SUCCESS;
 	
 }
