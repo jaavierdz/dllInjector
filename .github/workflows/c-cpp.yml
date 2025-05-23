@@ -1,0 +1,41 @@
+name: C/C++ CI (Windows)
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          base-devel
+          mingw-w64-x86_64-gcc
+          make
+        msystem: MINGW64
+
+    - name: Configure
+      shell: msys2 {0}
+      run: ./configure
+
+    - name: Build
+      shell: msys2 {0}
+      run: make
+
+    - name: Run Tests
+      shell: msys2 {0}
+      run: make check
+
+    - name: Distribution Check
+      shell: msys2 {0}
+      run: make distcheck
