@@ -1,3 +1,6 @@
+/* DLL Injector v1 */
+/* Written by Javierdz */
+
 #include <windows.h>
 #include <stdio.h>
 /* Esto son las variables para debug (verbose) */
