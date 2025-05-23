@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
 	PVOID lpBuffer = malloc(sizeof(dll));
 	memcpy(lpBuffer, &dll[0], sizeof(dll));
 	int wrote = WriteProcessMemory(hProcess, rBuffer, lpBuffer, sizeof(dll), NULL);
-	printf("add %d %p,",wrote, rBuffer);
+	printf("add %d %p\n",wrote, rBuffer);
     if (wrote == 0) {
 		printf("%s no se pudo escribir en la memoria del proceso (%ld), error %ld", err, PID, GetLastError());
 		return EXIT_FAILURE;
